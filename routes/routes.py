@@ -29,9 +29,10 @@ class Routes:
         return jsonify({"message": response}), 201
 
     def login(self):
-        data = request.args
-        username = data.get("username")
-        password = data.get("password")
+        data = request.get_json()
+        if data:
+            username = data.get("username")
+            password = data.get("password")
         response = self.user_manager.login(username, password)
         return jsonify({"message": response}), 200
 
@@ -50,7 +51,7 @@ class Routes:
     def register_routes(self):
         self.bp.add_url_rule("/", "home", self.home)
         self.bp.add_url_rule("/register_user", "register_user", self.register_user, methods=["POST"])
-        self.bp.add_url_rule("/login", "login", self.login)
+        self.bp.add_url_rule("/login", "login", self.login, methods=["POST"])
         self.bp.add_url_rule('/verify_email', "verify_email", self.verify_email, methods=['GET'])
 
 
