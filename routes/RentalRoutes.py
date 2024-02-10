@@ -14,6 +14,8 @@ class RentalRoutes:
         self.rental_manager = RentalManager(DB_FILE)
 
     def add_rental(self):
+        if 'email' not in session:
+            return {'status': 401, 'message': 'Unauthorized'}, 401
         data = request.get_json()
         if data:
             rental_name = data.get("rental_name")
@@ -21,12 +23,14 @@ class RentalRoutes:
             renter_name = data.get("renter_name")
             rent_amount = data.get("rent_amount")
         try:
-            rental = self.rental_manager.add_rental(rental_name, rental_address, renter_name, rent_amount)
+            self.rental_manager.add_rental(rental_name, rental_address, renter_name, rent_amount)
         except Exception:
             return jsonify({'message': 'Duplicate rental!'}), 400
         return jsonify({'message': 'Success'}), 201
 
     def list_rental(self):
+        if 'email' not in session:
+            return {'status': 401, 'message': 'Unauthorized'}, 401
         rentals = self.rental_manager.list_rentals()
         return rentals_schema.jsonify(rentals), 200
 

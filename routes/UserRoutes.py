@@ -9,7 +9,7 @@ DB_FILE = "user_database.db"
 APP_SECRET_KEY = os.environ['APP_SECRET_KEY']
 
 
-class Routes:
+class UserRoutes:
     def __init__(self):
         self.bp = Blueprint("routes", __name__)
         self.register_routes()
@@ -45,6 +45,19 @@ class Routes:
             session['email'] = email
         return jsonify(response), response['status']
 
+    def logout(self):
+        if 'email' in session:
+            # del session['email']
+            session.clear()
+            return {'status': 200, 'message': 'Log out successful'}
+
+        return {'status': 200, 'message': 'User already logged out'}
+
+    def is_authorized(self):
+        if 'email' in session:
+            return {'isAuthorized': True}
+        return {'isAuthorized': False}
+
     # Verify email route
     def verify_email(self):
         data = request.args
@@ -63,3 +76,5 @@ class Routes:
         self.bp.add_url_rule("/signup", "register_user", self.register_user, methods=["POST"])
         self.bp.add_url_rule("/signin", "login", self.login, methods=["POST"])
         self.bp.add_url_rule('/verify_email', "verify_email", self.verify_email, methods=['GET'])
+        self.bp.add_url_rule('/logout', "logout", self.logout, methods=['POST'])
+        self.bp.add_url_rule('/isAuthorized', "is_authorized", self.is_authorized, methods=['GET'])

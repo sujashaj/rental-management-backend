@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_session import Session
 from flask_cors import CORS
-from routes.routes import Routes
+from routes.UserRoutes import UserRoutes
 from routes.RentalRoutes import RentalRoutes
 from schema.schema import ma
 
