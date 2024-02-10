@@ -30,22 +30,23 @@ class UserManager:
             response_code = self.mailjet_client.send_email(email, username, verification_link)
             print(f"Email verification response code: {response_code}")
 
-    def login(self, username, password):
+    def login(self, email, password):
             session = self.Session()
-            user = session.query(User).filter(User.username == username).first()
+            user = session.query(User).filter(User.email == email).first()
             if user is not None:
                 if user.verify_password(password):
                     if user.is_verified:
                          session.close()
-                         return "Login successful!"
+                         return {"status": 200, "message": "Login successful!"}
                     else:
                         session.close()
-                        return "Account not verified. Please check your email for verification instructions."
+                        return {"status": 401, "message": "Account not verified. Please check your email "
+                                                          "for verification instructions."}
                 else:
                     session.close()
-                    return "Incorrect password"
+                    return {"status": 401, "message": "Invalid username or password"}
             session.close()
-            return "User not found."
+            return {"status": 401, "message": "Invalid username or password"}
 
     def set_verified(self, username):
         session = self.Session()

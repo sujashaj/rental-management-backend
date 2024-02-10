@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from token_management.TokenManager import TokenManager
 from user_management.UserManager import UserManager
 
@@ -15,10 +15,6 @@ class Routes:
         self.token_manager = TokenManager(APP_SECRET_KEY)
         self.user_manager = UserManager(DB_FILE, self.token_manager)
 
-
-    def home(self):
-        return "Welcome to the User Management Application"
-
     def register_user(self):
         data = request.get_json()
         if data:
@@ -31,10 +27,12 @@ class Routes:
     def login(self):
         data = request.get_json()
         if data:
-            username = data.get("username")
+            email = data.get("email")
             password = data.get("password")
-        response = self.user_manager.login(username, password)
-        return jsonify({"message": response}), 200
+        response = self.user_manager.login(email, password)
+        if response['status'] == 200:
+            session['email'] = email
+        return jsonify({"message": response}), response['status']
 
     def verify_email(self):
         data = request.args
@@ -49,7 +47,6 @@ class Routes:
             return jsonify({'message': 'Invalid token or user not found.'}), 400
 
     def register_routes(self):
-        self.bp.add_url_rule("/", "home", self.home)
         self.bp.add_url_rule("/register_user", "register_user", self.register_user, methods=["POST"])
         self.bp.add_url_rule("/login", "login", self.login, methods=["POST"])
         self.bp.add_url_rule('/verify_email', "verify_email", self.verify_email, methods=['GET'])
