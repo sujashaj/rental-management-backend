@@ -13,12 +13,10 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 ma.init_app(app)
 
-routes = Routes()
+user_routes = UserRoutes()
 rental_routes = RentalRoutes()
-app.register_blueprint(routes.bp)
+app.register_blueprint(user_routes.bp)
 app.register_blueprint(rental_routes.bp)
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
