@@ -29,7 +29,7 @@ class UserManager:
         session.commit()
         session.close()
 
-        verification_link = f"http://localhost:5000/verify_email?token={verification_token}"
+        verification_link = f"https://myrentalapp-backend.sujashaj.com/verify_email?token={verification_token}"
         response_code = self.mailjet_client.send_email(email, firstname, verification_link)
         print(f"Email verification response code: {response_code}")
 
