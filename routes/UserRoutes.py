@@ -11,7 +11,7 @@ APP_SECRET_KEY = os.environ['APP_SECRET_KEY']
 
 class UserRoutes:
     def __init__(self):
-        self.bp = Blueprint("routes", __name__)
+        self.bp = Blueprint("user_routes", __name__)
         self.register_routes()
         self.token_manager = TokenManager(APP_SECRET_KEY)
         self.user_manager = UserManager(DB_FILE, self.token_manager)
@@ -47,7 +47,6 @@ class UserRoutes:
 
     def logout(self):
         if 'email' in session:
-            # del session['email']
             session.clear()
             return {'status': 200, 'message': 'Log out successful'}
 
@@ -75,6 +74,6 @@ class UserRoutes:
         self.bp.add_url_rule("/", "home", self.home)
         self.bp.add_url_rule("/signup", "register_user", self.register_user, methods=["POST"])
         self.bp.add_url_rule("/signin", "login", self.login, methods=["POST"])
-        self.bp.add_url_rule('/verify_email', "verify_email", self.verify_email, methods=['GET'])
         self.bp.add_url_rule('/logout', "logout", self.logout, methods=['POST'])
+        self.bp.add_url_rule('/verify_email', "verify_email", self.verify_email, methods=['GET'])
         self.bp.add_url_rule('/isAuthorized', "is_authorized", self.is_authorized, methods=['GET'])

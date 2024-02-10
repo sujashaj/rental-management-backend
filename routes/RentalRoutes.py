@@ -2,10 +2,11 @@ import os
 
 from rental_management.RentalManager import RentalManager
 from flask import Blueprint, request, jsonify, session
-from schema.RentalSchema import rental_schema, rentals_schema
+from schema.RentalSchema import rentals_schema
 
 DB_FILE = "user_database.db"
 APP_SECRET_KEY = os.environ['APP_SECRET_KEY']
+
 
 class RentalRoutes:
     def __init__(self):
@@ -15,7 +16,7 @@ class RentalRoutes:
 
     def add_rental(self):
         if 'email' not in session:
-            return {'status': 401, 'message': 'Unauthorized'}, 401
+            return {'message': 'Unauthorized'}, 401
         data = request.get_json()
         if data:
             rental_name = data.get("rental_name")

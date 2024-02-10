@@ -7,11 +7,9 @@ SENDER_EMAIL = os.environ['SENDER_EMAIL']
 SENDER_NAME = os.environ['SENDER_NAME']
 
 
-
 class MailJetClient:
     def __init__(self):
         self.mailjet = Client(auth=(API_KEY, API_SECRET), version='v3.1')
-
 
     def send_email(self, receiver_email, receiver_name, verification_link):
         data = {
